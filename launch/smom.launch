@@ -1,0 +1,21 @@
+<launch>
+
+  <arg name="output" default="log"/>
+
+  <group ns="standard_model">
+    <node pkg="standard_mom" name="working_memory" type="working_memory.py" output="$(arg output)"/>
+    <node pkg="standard_mom" name="declarative_memory" type="declarative_memory.py" output="$(arg output)"/>
+    <node pkg="standard_mom" name="procedural_memory" type="procedural_memory.py" output="$(arg output)"/>
+    <node pkg="standard_mom" name="perception" type="perception.py" output="$(arg output)"/>
+    <node pkg="standard_mom" name="motors" type="motors.py" output="$(arg output)"/>
+  </group>
+  <!-- <group ns="turtlesim2">
+    <node pkg="turtlesim" name="sim" type="turtlesim_node"/>
+  </group> -->
+
+  <!-- <node pkg="turtlesim" name="mimic" type="mimic">
+    <remap from="input" to="turtlesim1/turtle1"/>
+    <remap from="output" to="turtlesim2/turtle1"/>
+  </node> -->
+
+</launch>
