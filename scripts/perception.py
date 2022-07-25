@@ -17,6 +17,7 @@ class Perception():
         self.loop_rate = rospy.Rate(100)
 
         # Messages types
+        self.locobot_msg = Image
         self.work_msg = String
         self.perc_msg = String
 
@@ -25,9 +26,13 @@ class Perception():
         self.workmem_topic = "perception_to_workmem"
         self.pub = rospy.Publisher(self.workmem_topic, self.work_msg, queue_size=100)
 
-        ## Subscribers
+        # Subscribers
         self.work_listen_topic = "workmem_to_perception"
         rospy.Subscriber(self.work_listen_topic, self.work_msg, self.from_wm_cb)
+
+        self.locobot_topic = "/locobot/camera/color/image_raw"
+        rospy.Subscriber(self.locobot_topic, self.locobot_msg, self.from_wm_cb)
+
 
         # Buffers
         # self.motor_buffer = np.empty()
