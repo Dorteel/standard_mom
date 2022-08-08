@@ -1,6 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
+#from interbotix_perception_modules.pointcloud import InterbotixPointCloudInterface
 import rospy
+#from locobot.locobot import InterbotixLocobotXS
+from locobot_custom.import_me_if_you_can import say_it_works
 import sys
 from sensor_msgs.msg import Image
 from std_msgs.msg import String
@@ -12,15 +15,16 @@ class Perception():
 
         # Initialize node
         rospy.init_node("procedural memory")
-
+        #self.bot = InterbotixLocobotXS("locobot_wx250s", arm_model="mobile_wx250s")
         # Node cycle rate (in Hz).
         self.loop_rate = rospy.Rate(100)
 
+        #self.pcl = InterbotixPointCloudInterface(locobot + "/pc_filter", False)
         # Messages types
         self.locobot_msg = Image
         self.work_msg = String
         self.perc_msg = String
-
+        say_it_works()
 
         # Publishers
         self.workmem_topic = "perception_to_workmem"
