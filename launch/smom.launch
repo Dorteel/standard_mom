@@ -3,6 +3,10 @@
   <arg name="output" default="log"/>
 
   <group ns="standard_model">
+    <group ns="yolo">
+      <rosparam file="$(find standard_mom)/config/yolo_params.yaml" />
+      <param name="data" value="$(find standard_mom)/data/coco128.yaml"/>
+    </group>
     <node pkg="standard_mom" name="working_memory" type="working_memory.py" output="$(arg output)"/>
     <node pkg="standard_mom" name="declarative_memory" type="declarative_memory.py" output="$(arg output)"/>
     <node pkg="standard_mom" name="procedural_memory" type="procedural_memory.py" output="$(arg output)"/>

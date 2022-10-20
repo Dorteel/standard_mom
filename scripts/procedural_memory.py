@@ -39,7 +39,7 @@ class ProceduralMemory():
 
     def from_wm_cb(self, msg):
         self.msg = msg
-        rospy.loginfo("Received from working memory: {}".format(self.msg.data))
+        #rospy.loginfo("Received from working memory: {}".format(self.msg.data))
 
 
     def start(self):

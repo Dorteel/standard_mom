@@ -1,0 +1,17 @@
+
+weights              : "yolov5x6.pt"
+confidence_threshold : 0.75
+iou_threshold        : 0.45
+maximum_detections   : 1000
+device               : 0
+agnostic_nms         : true
+line_thickness       : 3
+dnn                  : true
+half                 : false
+inference_size_h     : 640
+inference_size_w     : 640
+view_image           : true
+input_image_topic    : "/locobot/camera/color/image_raw"
+output_topic         : "/yolov5/detections"
+publish_image        : false
+output_image_topic   : "/yolov5/image_out"

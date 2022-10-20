@@ -11,7 +11,7 @@ class WorkingMemory():
     def __init__(self):
 
         # Initialize node
-        rospy.init_node("working memory", log_level=rospy.DEBUG)
+        rospy.init_node("working memory")
 
         # Node cycle rate (in Hz).
         self.loop_rate = rospy.Rate(100)
@@ -55,15 +55,15 @@ class WorkingMemory():
 
     def declarative_cb(self, msg):
         self.msg = msg
-        rospy.logdebug("Received from declarative memory: {}".format(self.msg.data))
+        #rospy.logdebug("Received from declarative memory: {}".format(self.msg.data))
 
     def perception_cb(self, msg):
         self.msg = msg
-        rospy.loginfo("Received from perception: {}".format(self.msg.data))
+        #rospy.loginfo("Received from perception: {}".format(self.msg.data))
 
     def procedural_cb(self, msg):
         self.msg = msg
-        rospy.loginfo("Received from procedural memory: {}".format(self.msg.data))
+        #rospy.loginfo("Received from procedural memory: {}".format(self.msg.data))
 
 
     def start(self):

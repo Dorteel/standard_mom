@@ -1,34 +1,33 @@
 #!/usr/bin/env python3
 
-#from interbotix_perception_modules.pointcloud import InterbotixPointCloudInterface
 import rospy
-#from locobot.locobot import InterbotixLocobotXS
-from locobot_custom.import_me_if_you_can import say_it_works
 import sys
 from sensor_msgs.msg import Image
 from std_msgs.msg import String
-import numpy as np
+from interbotix_perception_modules.pointcloud import InterbotixPointCloudInterface
+from interbotix_perception_modules.yolo import InterbotixYoloInterface
 
 class Perception():
     # Must have __init__(self) function for a class, similar to a C++ class constructor.
     def __init__(self):
 
         # Initialize node
-        rospy.init_node("procedural memory")
-        #self.bot = InterbotixLocobotXS("locobot_wx250s", arm_model="mobile_wx250s")
+        rospy.init_node("perception")
+        self.pcl = InterbotixPointCloudInterface("locobot" + "/pc_filter", False)
+        self.yolo = InterbotixYoloInterface()
+        _, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
+
         # Node cycle rate (in Hz).
         self.loop_rate = rospy.Rate(100)
 
-        #self.pcl = InterbotixPointCloudInterface(locobot + "/pc_filter", False)
         # Messages types
         self.locobot_msg = Image
         self.work_msg = String
         self.perc_msg = String
-        say_it_works()
 
         # Publishers
         self.workmem_topic = "perception_to_workmem"
-        self.pub = rospy.Publisher(self.workmem_topic, self.work_msg, queue_size=100)
+        self.pub = rospy.Publisher(self.workmem_topic, self.perc_msg, queue_size=100)
 
         # Subscribers
         self.work_listen_topic = "workmem_to_perception"
@@ -48,12 +47,15 @@ class Perception():
 
     def from_wm_cb(self, msg):
         self.msg = msg
-        rospy.loginfo("{}: Received from working memory: {}".format("Perception", self.msg.data))
+        #rospy.loginfo("{}: Received from working memory: {}".format("Perception", self.msg.data))
 
 
     def start(self):
         while not rospy.is_shutdown():
             # Publish our custom message.
+            #_, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
+
+            #print(self.clusters)
             self.loop_rate.sleep()
 
 
