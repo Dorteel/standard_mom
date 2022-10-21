@@ -15,7 +15,7 @@ class Perception():
         rospy.init_node("perception")
         self.pcl = InterbotixPointCloudInterface("locobot" + "/pc_filter", False)
         self.yolo = InterbotixYoloInterface()
-        _, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
+        #_, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
 
         # Node cycle rate (in Hz).
         self.loop_rate = rospy.Rate(100)
@@ -54,8 +54,9 @@ class Perception():
         while not rospy.is_shutdown():
             # Publish our custom message.
             #_, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
+            _, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
 
-            #print(self.clusters)
+            print(self.clusters)
             self.loop_rate.sleep()
 
 
