@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from chardet import detect
 import rospy
 import sys
 from sensor_msgs.msg import Image
@@ -55,10 +56,18 @@ class Perception():
             # Publish our custom message.
             #_, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
             _, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
+            self.detections = self.yolo.getDetected()
+            msg =  self.constructPerception(self.clusters, self.detections)
 
-            print(self.clusters)
+            self.pub.publish(msg)
             self.loop_rate.sleep()
 
+
+    def constructPerception(self, clusters, detections):
+        rospy.logwarn("Clusters: {}".format(clusters))
+        rospy.logwarn("Detection: {}".format(detections))
+        rospy.logerr("----------")
+        return "True"
 
 def main(args):   
     try:
