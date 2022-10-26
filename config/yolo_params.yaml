@@ -10,8 +10,8 @@ dnn                  : true
 half                 : false
 inference_size_h     : 640
 inference_size_w     : 640
-view_image           : true
+view_image           : false
 input_image_topic    : "/locobot/camera/color/image_raw"
 output_topic         : "/yolov5/detections"
-publish_image        : false
+publish_image        : true
 output_image_topic   : "/yolov5/image_out"
