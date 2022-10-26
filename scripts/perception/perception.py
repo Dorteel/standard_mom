@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from chardet import detect
+# from chardet import detect
 import rospy
 import sys
 from sensor_msgs.msg import Image
