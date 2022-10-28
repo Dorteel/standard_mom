@@ -10,6 +10,8 @@ from sensor_msgs.msg import Image
 from std_msgs.msg import String
 from interbotix_perception_modules.pointcloud import InterbotixPointCloudInterface
 from interbotix_perception_modules.yolo import InterbotixYoloInterface
+from rdflib import Graph, Literal, RDF, URIRef
+
 
 class Perception():
     # Must have __init__(self) function for a class, similar to a C++ class constructor.
@@ -62,7 +64,7 @@ class Perception():
 
     def image_callback(self, data):
         self.image_in = self.bridge.imgmsg_to_cv2(data, desired_encoding="bgr8")
-
+        
     def marker_callback(self, marker):
         self.markers[marker.id] = marker.pose.position
 
@@ -71,6 +73,16 @@ class Perception():
         rospy.logwarn("Detection: {}".format(detections))
         rospy.logerr("----------")
         return "True"
+
+    def generateSceneGraph(self, detections):
+        """
+        Scene graphs are generated from the detection and returned in a graph
+        """
+        sceneGraph = Graph()
+        # TODO: Put generated detections into a scene graph
+        #for key, value in detections:
+        #    sceneGraph.add()
+        return sceneGraph
 
     def start(self):
         while not rospy.is_shutdown():
