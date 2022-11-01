@@ -11,6 +11,7 @@ from std_msgs.msg import String
 from interbotix_perception_modules.pointcloud import InterbotixPointCloudInterface
 from interbotix_perception_modules.yolo import InterbotixYoloInterface
 from rdflib import Graph, Literal, RDF, URIRef
+from rdflib.namespace import SOSA
 
 
 class Perception():
@@ -56,6 +57,7 @@ class Perception():
         # self.decl_buffer = np.empty()
         # self.proc_buffer = np.empty()
         self.bridge = CvBridge()
+        self.initSensorKG()
         self.start()
 
     def from_wm_cb(self, msg):
@@ -78,11 +80,17 @@ class Perception():
         """
         Scene graphs are generated from the detection and returned in a graph
         """
-        sceneGraph = Graph()
+        sceneGraph = None
         # TODO: Put generated detections into a scene graph
         #for key, value in detections:
         #    sceneGraph.add()
         return sceneGraph
+
+    def initSensorKG(self):
+        self.sensorGraph = Graph()
+        self.camera = URIRef("http://example.org/locobot/camera")
+        self.sensorGraph.add((self.camera, RDF.type, SOSA.Sensor))
+        print(self.camera)
 
     def start(self):
         while not rospy.is_shutdown():

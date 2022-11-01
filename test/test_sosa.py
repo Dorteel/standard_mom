@@ -11,7 +11,9 @@ locobotCamera = URIRef("http://example.org/camera")
 sensorGraph.add((locobotCamera, RDF.type, SOSA.Actuator))
 sensorGraph.add((locobot, SOSA.madeByActuator, locobotCamera))
 
+camera = URIRef(SOSA.Sensor)
+print(camera)
 # Print out the entire Graph in the RDF Turtle format
 #print(sosaGraph.serialize(format="turtle"))
 
-print(sensorGraph.serialize(format="turtle"))
+#print(sensorGraph.serialize(format="turtle"))
