@@ -1,18 +1,16 @@
 #!/usr/bin/env python3
 
 # from chardet import detect
-from sklearn.neighbors import LocalOutlierFactor
 import rospy
 import sys
 import cv2
-import os
 from cv_bridge import CvBridge
 from visualization_msgs.msg import Marker
 from sensor_msgs.msg import Image
 from std_msgs.msg import String
 from interbotix_perception_modules.pointcloud import InterbotixPointCloudInterface
 from interbotix_perception_modules.yolo import InterbotixYoloInterface
-from rdflib import Graph, Literal, RDF, URIRef, Namespace
+from rdflib import Graph, Literal, RDF, URIRef
 from rdflib.namespace import SOSA
 
 
@@ -54,8 +52,16 @@ class Perception():
         #self.
         
         # Initiate a graph for the sensory information
-        self.locobot = Namespace("http://example.org/locobot/")
-        self.initSceneGraph()
+        self.sensorGraph = Graph()
+        self.camera = URIRef("http://example.org/locobot/camera")
+        self.waist = URIRef("http://example.org/locobot/joints/waist")
+        self.shoulder = URIRef("http://example.org/locobot/joints/shoulder")
+        self.wrist_angle = URIRef("http://example.org/locobot/joints/wrist_angle")
+        self.forearm_roll = URIRef("http://example.org/locobot/joints/forearm_roll")
+        self.wrist_rotate = URIRef("http://example.org/locobot/joints/wrist_rotate")
+        self.gripper = URIRef("http://example.org/locobot/joints/wrist_rotate")
+        self.perceptionGraph.add((self.camera, RDF.type, SOSA.Sensor))
+        
         # Buffers
         # self.motor_buffer = np.empty()
         # self.perc_buffer = np.empty()
@@ -81,37 +87,18 @@ class Perception():
         return "True"
 
     def initSceneGraph(self):
-        # Using random nodes for the properties until I find a proper ontology
-        self.perceptionGraph = Graph()
-        self.perceptionGraph.add((self.locobot.camera, RDF.type, SOSA.Sensor))
-        self.color = URIRef("http://example.org/Color/")
-        self.location = URIRef("http://example.org/Location/")
-        self.numberofpoints = URIRef("http://example.org/NumberOfPoints/")
-        self.boundingbox = URIRef("http://example.org/BoundingBox/")
-        self.perceptionGraph.add((self.color, RDF.type, SOSA.ObservableProperty))
-        self.perceptionGraph.add((self.location, RDF.type, SOSA.ObservableProperty))
-        self.perceptionGraph.add((self.numberofpoints, RDF.type, SOSA.ObservableProperty))
-        self.perceptionGraph.add((self.boundingbox, RDF.type, SOSA.ObservableProperty))
-
-
-    def generateSceneGraph(self):
+        self.perceptionGraph.add(())
+    
+    def generateSceneGraph(self, detections):
         """
         Scene graphs are generated from the detection and returned in a graph
         """
-    
-        
-        for cluser in self.clusters:
-            observation = URIRef("http://example.org/Observation/" + cluser['name'])
-            self.perceptionGraph.add((observation, RDF.type, SOSA.Observation))
-            self.perceptionGraph.add((Literal(str(cluser['position'])), RDF.type, self.location))
-            self.perceptionGraph.add((Literal(str(cluser['color'])), RDF.type, self.color))
-            self.perceptionGraph.add((Literal(str(cluser['num_points'])), RDF.type, self.numberofpoints))
-        rospy.logerr(len(self.perceptionGraph))
+
+        self.perceptionGraph.add(())
         # TODO: Put generated detections into a scene graph
         #for key, value in detections:
         #    sceneGraph.add()
-        
-        return None
+        return sceneGraph
 
 
     def start(self):
@@ -120,14 +107,10 @@ class Perception():
             #_, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
             _, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
             self.detections = self.yolo.getDetected()
-            self.generateSceneGraph()
+            msg =  self.constructPerception(self.clusters, self.detections)
             rospy.logerr(self.markers)
-            self.saveKG("test.ttl")
-            #self.pub.publish(msg)
+            self.pub.publish(msg)
             self.loop_rate.sleep()
-
-    def saveKG(self, name):
-         self.perceptionGraph.serialize(destination="/home/user/locobot_ws/src/standard_model_of_mind/standard_mom/scripts/perception/" + name)
 
 
 def main(args):   
