@@ -23,9 +23,11 @@ print(locobot.waist)
 g = Graph()
 g.parse("http://www.w3.org/People/Berners-Lee/card")
 g.serialize(destination="/home/user/locobot_ws/src/standard_model_of_mind/standard_mom/test/tbl.ttl")
-print("file saved!")
-print(os.getcwd())
+# print("file saved!")
+# print(os.getcwd())
 # Print out the entire Graph in the RDF Turtle format
 #print(sosaGraph.serialize(format="turtle"))
 
 #print(sensorGraph.serialize(format="turtle"))
+oro = Graph().parse("http://kb.openrobots.org/")
+print(len(oro))
