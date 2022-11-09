@@ -74,7 +74,9 @@ class Proprioception():
 
 def main(args):   
     try:
-        Perception()
+        #Perception()
+        rospy.init_node("proprioception")
+        rospy.logfatal('proprioception started')
         rospy.spin()
     except KeyboardInterrupt:
         print("Shutting down perception node.")
