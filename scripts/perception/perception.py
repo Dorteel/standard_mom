@@ -4,15 +4,18 @@ import roslaunch
 import rospy
 import os
 
-rospy.init_node('Perception-3', anonymous=True)
+rospy.init_node('Perception', anonymous=True)
 uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
 roslaunch.configure_logging(uuid)
-pwd = os.getcwd()
-rospy.logfatal(str(pwd))
-launch = roslaunch.parent.ROSLaunchParent(uuid, ["/home/haier/catkin_ws/src/testapi/launch/test_node.launch"])
+pwd = os.path.dirname(os.path.abspath(__file__))
+launch = roslaunch.parent.ROSLaunchParent(uuid, ['/'.join(str(pwd).split('/')[:-2]) + '/launch/perception.launch'])
 launch.start()
-rospy.logfatal("started")
 
-rospy.sleep(3)
+
+try:
+  launch.spin()
+finally:
+  # After Ctrl+C, stop all nodes from running
+  launch.shutdown()
 # 3 seconds later
-launch.shutdown()
+# launch.shutdown()

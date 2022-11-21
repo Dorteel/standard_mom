@@ -64,20 +64,33 @@ class Proprioception():
         while not rospy.is_shutdown():
             # Publish our custom message.
             #_, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
-            _, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
-            self.detections = self.yolo.getDetected()
-            msg =  self.constructPerception(self.clusters, self.detections)
-            rospy.logerr(self.markers)
+            #_, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
+            # self.detections = self.yolo.getDetected()
+            msg =  "this"
+            rospy.logfatal(msg)
             self.pub.publish(msg)
             self.loop_rate.sleep()
+
+    # def start(self):
+    #     while not rospy.is_shutdown():
+    #         # Publish our custom message.
+    #         #_, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
+    #         _, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
+    #         self.detections = self.yolo.getDetected()
+    #         msg =  self.constructPerception(self.clusters, self.detections)
+    #         rospy.logerr(self.markers)
+    #         self.pub.publish(msg)
+    #         self.loop_rate.sleep()
 
 
 def main(args):   
     try:
         #Perception()
         rospy.init_node("proprioception")
-        rospy.logfatal('proprioception started')
+        rospy.logwarn('proprioception started')
+        Proprioception()
         rospy.spin()
+
     except KeyboardInterrupt:
         print("Shutting down perception node.")
 
