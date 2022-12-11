@@ -1,6 +1,6 @@
 from rdflib import Graph, Literal, RDF, URIRef, Namespace
 from rdflib.namespace import SOSA
-import os
+
 # Create an empty Graph
 robotGraph = Graph()
 brow_joints = Namespace("http://example.org/brow/joints/")

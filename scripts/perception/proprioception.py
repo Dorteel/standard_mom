@@ -67,7 +67,7 @@ class Proprioception():
             #_, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
             # self.detections = self.yolo.getDetected()
             msg =  "this"
-            rospy.logfatal(msg)
+            #rospy.logfatal(msg)
             self.pub.publish(msg)
             self.loop_rate.sleep()
 

@@ -119,7 +119,7 @@ class Vision():
             # Publish our custom message.
             #_, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
             _, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
-            self.detections = self.yolo.getDetected()
+            #self.detections = self.yolo.getDetected()
             self.generateSceneGraph()
             rospy.logerr(self.markers)
             self.saveKG("test.ttl")
@@ -132,7 +132,7 @@ class Vision():
 
 def main(args):   
     try:
-        Perception()
+        Vision()
         rospy.spin()
     except KeyboardInterrupt:
         print("Shutting down perception node.")

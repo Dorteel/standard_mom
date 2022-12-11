@@ -4,83 +4,41 @@
 
 <http://example.org/Observation/cluster_1> a sosa:Observation .
 
-<http://example.org/Observation/cluster_2> a sosa:Observation .
-
 <http://example.org/locobot/camera> a sosa:Sensor .
 
-"301.8" a <http://example.org/NumberOfPoints/> .
+"110.0" a <http://example.org/NumberOfPoints/> .
 
-"311.6" a <http://example.org/NumberOfPoints/> .
+"110.8" a <http://example.org/NumberOfPoints/> .
 
-"311.8" a <http://example.org/NumberOfPoints/> .
+"111.2" a <http://example.org/NumberOfPoints/> .
 
-"314.8" a <http://example.org/NumberOfPoints/> .
+"111.80000000000001" a <http://example.org/NumberOfPoints/> .
 
-"315.59999999999997" a <http://example.org/NumberOfPoints/> .
+"115.39999999999999" a <http://example.org/NumberOfPoints/> .
 
-"326.40000000000003" a <http://example.org/NumberOfPoints/> .
+"[0.4183602514513303, 0.3052351041275555, -0.0007788713186315244]" a <http://example.org/Location/> .
 
-"431.8" a <http://example.org/NumberOfPoints/> .
+"[0.42989604159631173, 0.313626968284189, -0.013352508634694948]" a <http://example.org/Location/> .
 
-"435.6" a <http://example.org/NumberOfPoints/> .
+"[0.43016409929401517, 0.3125413305242199, -0.014498247996820146]" a <http://example.org/Location/> .
 
-"440.4" a <http://example.org/NumberOfPoints/> .
+"[0.4306237184001357, 0.3135504173287691, -0.01650827761453011]" a <http://example.org/Location/> .
 
-"441.2" a <http://example.org/NumberOfPoints/> .
+"[0.43070693078677275, 0.31277494219743995, -0.015190862589512799]" a <http://example.org/Location/> .
 
-"442.20000000000005" a <http://example.org/NumberOfPoints/> .
+"[97.19999999999999, 92.0, 92.0]" a <http://example.org/Color/> .
 
-"[0.14795964422805294, 0.352413331260368, -0.0258951456742198]" a <http://example.org/Location/> .
+"[97.2, 92.4, 91.8]" a <http://example.org/Color/> .
 
-"[0.14822969427580418, 0.35271486507497246, -0.0284966834296575]" a <http://example.org/Location/> .
+"[98.20000000000002, 93.0, 93.4]" a <http://example.org/Color/> .
 
-"[0.1484384185632357, 0.3527500926474037, -0.02480985168101535]" a <http://example.org/Location/> .
+"[98.6, 94.2, 93.2]" a <http://example.org/Color/> .
 
-"[0.14860140653493698, 0.35316693899689544, -0.025620472999162425]" a <http://example.org/Location/> .
-
-"[0.14869018856674984, 0.352865235378995, -0.02965071297522265]" a <http://example.org/Location/> .
-
-"[0.14870401717687518, 0.35263067855907954, -0.024131170906743882]" a <http://example.org/Location/> .
-
-"[0.3753386440958041, 0.27923818098138287, -0.03981881716974939]" a <http://example.org/Location/> .
-
-"[0.3756118831615096, 0.27910811333317054, -0.041220792286814134]" a <http://example.org/Location/> .
-
-"[0.3758033645524637, 0.27946520605752845, -0.04130567567311988]" a <http://example.org/Location/> .
-
-"[0.37585000099852867, 0.2792461238787912, -0.039446929889646154]" a <http://example.org/Location/> .
-
-"[0.3758539559825205, 0.27954588236515565, -0.041331696586139]" a <http://example.org/Location/> .
-
-"[0.3759582168519874, 0.27948995385641207, -0.04021999650470259]" a <http://example.org/Location/> .
-
-"[207.2, 199.8, 195.8]" a <http://example.org/Color/> .
-
-"[207.39999999999998, 200.39999999999998, 196.2]" a <http://example.org/Color/> .
-
-"[207.4, 200.0, 196.2]" a <http://example.org/Color/> .
-
-"[207.40000000000003, 200.4, 196.60000000000002]" a <http://example.org/Color/> .
-
-"[207.59999999999997, 200.4, 196.2]" a <http://example.org/Color/> .
-
-"[207.60000000000002, 200.4, 196.39999999999998]" a <http://example.org/Color/> .
-
-"[54.4, 53.2, 50.2]" a <http://example.org/Color/> .
-
-"[55.599999999999994, 54.400000000000006, 52.0]" a <http://example.org/Color/> .
-
-"[55.6, 54.39999999999999, 51.4]" a <http://example.org/Color/> .
-
-"[55.8, 54.4, 52.0]" a <http://example.org/Color/> .
-
-"[55.8, 54.400000000000006, 51.400000000000006]" a <http://example.org/Color/> .
-
-"[56.199999999999996, 55.0, 52.4]" a <http://example.org/Color/> .
-
-<http://example.org/NumberOfPoints/> a sosa:ObservableProperty .
+"[98.6, 94.2, 94.00000000000001]" a <http://example.org/Color/> .
 
 <http://example.org/Color/> a sosa:ObservableProperty .
 
 <http://example.org/Location/> a sosa:ObservableProperty .
+
+<http://example.org/NumberOfPoints/> a sosa:ObservableProperty .
 
