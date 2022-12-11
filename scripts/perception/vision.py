@@ -98,15 +98,24 @@ class Vision():
         """
         Scene graphs are generated from the detection and returned in a graph
         """
-    
-        
+        sceneGraph = Graph()
+
         for cluser in self.clusters:
             observation = URIRef("http://example.org/Observation/" + cluser['name'])
-            self.perceptionGraph.add((observation, RDF.type, SOSA.Observation))
-            self.perceptionGraph.add((Literal(str(cluser['position'])), RDF.type, self.location))
-            self.perceptionGraph.add((Literal(str(cluser['color'])), RDF.type, self.color))
-            self.perceptionGraph.add((Literal(str(cluser['num_points'])), RDF.type, self.numberofpoints))
-        rospy.logerr(len(self.perceptionGraph))
+            sceneGraph.add((observation, RDF.type, SOSA.Observation))
+            sceneGraph.add((observation, self.locobot.hasPosition, Literal(str(cluser['position']))))
+            sceneGraph.add((observation, self.locobot.hasColor, Literal(str(cluser['color']))))
+            sceneGraph.add((observation, self.locobot.hasNumberOfPoints, Literal(str(cluser['num_points']))))
+        for detection in self.detections:
+            bbox = [detection.xmin, detection.ymin, detection.xmax, detection.ymax]
+            observation = URIRef("http://example.org/Observation/" + detection.Class)
+            sceneGraph.add((observation, RDF.type, SOSA.Observation))
+            sceneGraph.add((observation, self.locobot.hasLabel, Literal(detection.Class)))
+            sceneGraph.add((observation, self.locobot.hasProbability, Literal(detection.probability)))
+            sceneGraph.add((observation, self.locobot.hasBoundingBox, Literal(bbox)))
+        return sceneGraph
+
+        #rospy.logerr(len(self.perceptionGraph))
         # TODO: Put generated detections into a scene graph
         #for key, value in detections:
         #    sceneGraph.add()
@@ -119,11 +128,10 @@ class Vision():
             # Publish our custom message.
             #_, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
             _, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
-            #self.detections = self.yolo.getDetected()
-            self.generateSceneGraph()
-            rospy.logerr(self.markers)
+            self.detections = self.yolo.getDetected()
+            scenegraph = self.generateSceneGraph()
             self.saveKG("test.ttl")
-            #self.pub.publish(msg)
+            self.pub.publish(scenegraph)
             self.loop_rate.sleep()
 
     def saveKG(self, name):

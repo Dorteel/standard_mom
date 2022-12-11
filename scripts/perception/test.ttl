@@ -2,43 +2,11 @@
 
 <http://example.org/BoundingBox/> a sosa:ObservableProperty .
 
-<http://example.org/Observation/cluster_1> a sosa:Observation .
-
-<http://example.org/locobot/camera> a sosa:Sensor .
-
-"110.0" a <http://example.org/NumberOfPoints/> .
-
-"110.8" a <http://example.org/NumberOfPoints/> .
-
-"111.2" a <http://example.org/NumberOfPoints/> .
-
-"111.80000000000001" a <http://example.org/NumberOfPoints/> .
-
-"115.39999999999999" a <http://example.org/NumberOfPoints/> .
-
-"[0.4183602514513303, 0.3052351041275555, -0.0007788713186315244]" a <http://example.org/Location/> .
-
-"[0.42989604159631173, 0.313626968284189, -0.013352508634694948]" a <http://example.org/Location/> .
-
-"[0.43016409929401517, 0.3125413305242199, -0.014498247996820146]" a <http://example.org/Location/> .
-
-"[0.4306237184001357, 0.3135504173287691, -0.01650827761453011]" a <http://example.org/Location/> .
-
-"[0.43070693078677275, 0.31277494219743995, -0.015190862589512799]" a <http://example.org/Location/> .
-
-"[97.19999999999999, 92.0, 92.0]" a <http://example.org/Color/> .
-
-"[97.2, 92.4, 91.8]" a <http://example.org/Color/> .
-
-"[98.20000000000002, 93.0, 93.4]" a <http://example.org/Color/> .
-
-"[98.6, 94.2, 93.2]" a <http://example.org/Color/> .
-
-"[98.6, 94.2, 94.00000000000001]" a <http://example.org/Color/> .
-
 <http://example.org/Color/> a sosa:ObservableProperty .
 
 <http://example.org/Location/> a sosa:ObservableProperty .
 
 <http://example.org/NumberOfPoints/> a sosa:ObservableProperty .
+
+<http://example.org/locobot/camera> a sosa:Sensor .
 

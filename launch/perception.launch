@@ -1,11 +1,10 @@
 <launch>
 
   <arg name="output" default="log"/>
-    <node pkg="standard_mom" name="proprioception" type="proprioception.py" output="$(arg output)"/>
-    <node pkg="standard_mom" name="vision" type="vision.py" output="$(arg output)"/>
-  <!-- <group ns="turtlesim2">
-    <node pkg="turtlesim" name="sim" type="turtlesim_node"/>
-  </group> -->
+    <group ns="perception">
+      <node pkg="standard_mom" name="proprioception" type="proprioception.py" output="$(arg output)"/>
+      <node pkg="standard_mom" name="vision" type="vision.py" output="$(arg output)"/>
+    </group>
 
   <!-- <node pkg="turtlesim" name="mimic" type="mimic">
     <remap from="input" to="turtlesim1/turtle1"/>
