@@ -45,13 +45,14 @@ class Motors():
 
     def start(self):
         while not rospy.is_shutdown():
-            if self.counter <= 2:
-                self.bot.camera.pan_tilt_move(0.4, 0.9)
-                self.bot.arm.set_ee_pose_components(x=0.3, z=0.2, moving_time=1.5)
-                self.bot.gripper.open()
-                rospy.loginfo("Step: {}".format(self.counter))
-            else:
-                self.bot.arm.go_to_sleep_pose()
+            #if self.counter <= 2:
+                #self.bot.camera.pan_tilt_move(0.4, 0.9)
+                #self.bot.arm.set_ee_pose_components(x=0.3, z=0.2, moving_time=1.5)
+                #self.bot.gripper.open()
+                #rospy.loginfo("Step: {}".format(self.counter))
+            #else:
+                #pass
+                #self.bot.arm.go_to_sleep_pose()
             self.counter += 1
             self.loop_rate.sleep()
 

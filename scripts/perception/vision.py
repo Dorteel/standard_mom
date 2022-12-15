@@ -6,6 +6,7 @@ import rospy
 import sys
 import cv2
 import os
+import numpy as np
 from cv_bridge import CvBridge
 from visualization_msgs.msg import Marker
 from sensor_msgs.msg import Image
@@ -56,11 +57,6 @@ class Vision():
         # Initiate a graph for the sensory information
         self.locobot = Namespace("http://example.org/locobot/")
         self.initSceneGraph()
-        # Buffers
-        # self.motor_buffer = np.empty()
-        # self.perc_buffer = np.empty()
-        # self.decl_buffer = np.empty()
-        # self.proc_buffer = np.empty()
         self.bridge = CvBridge()
         self.start()
 
@@ -94,9 +90,34 @@ class Vision():
         self.perceptionGraph.add((self.boundingbox, RDF.type, SOSA.ObservableProperty))
 
 
+    def get_pixel_from3d(self, coords):
+        ''''
+        Takes as input 3D coordinates, outputs two pixels
+        '''
+        # Intrinsic matrix - hardcoded for now, TODO: Change it to subscription
+        coords = np.append(coords, 1)
+        P = np.array([380.7534484863281, 0.0, 318.1063232421875, 0.0, 0.0, 380.7534484863281, 235.16383361816406, 0.0, 0.0, 0.0, 1.0, 0.0], dtype=np.float32).reshape(3,4)
+        pix = np.matmul(P, coords)
+        c = np.array([pix[0]/pix[2], pix[1]/pix[2]]).astype('int32')
+        return c
+
+
+    def get_objects(self):
+        '''
+        Looks through the detected clusters and matches them with the detected bounding boxes
+        '''
+        for cluster in self.clusters:
+                px, py = self.get_pixel_from3d(cluster['position'])
+                for detection in self.detections:
+                    x_range = range(detection.xmin, detection.xmax)
+                    y_range = range(detection.ymin, detection.ymax)
+                    if px in x_range and py in y_range:
+                        print('Cluster {} is a {}'.format(cluster['name'], detection.Class))
+
     def generateSceneGraph(self):
         """
         Scene graphs are generated from the detection and returned in a graph
+        
         """
         sceneGraph = Graph()
 
@@ -127,11 +148,12 @@ class Vision():
         while not rospy.is_shutdown():
             # Publish our custom message.
             #_, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
-            _, self.clusters = self.pcl.get_cluster_positions(ref_frame="locobot/arm_base_link", sort_axis="y", reverse=True)
+            _, self.clusters = self.pcl.get_cluster_positions(ref_frame='locobot/camera_color_optical_frame', sort_axis="y", reverse=True)
             self.detections = self.yolo.getDetected()
-            scenegraph = self.generateSceneGraph()
-            self.saveKG("test.ttl")
-            self.pub.publish(scenegraph)
+            #scenegraph = self.generateSceneGraph()
+            self.get_objects()
+            #self.saveKG("test.ttl")
+            #self.pub.publish(scenegraph)
             self.loop_rate.sleep()
 
     def saveKG(self, name):
