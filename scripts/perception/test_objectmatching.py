@@ -9,6 +9,7 @@ from rdflib import Graph, Literal, RDF, URIRef, Namespace
 from rdflib.namespace import SOSA
 from detection_msgs.msg import PerceivedObject, PerceivedObjects
 import time
+import sys
 
 class DetectedObject():
     def __init__(self, pos=None, name=None, color=None, npoints=None, prob=None, bbox=None, label=None):
@@ -50,14 +51,14 @@ class VisionNode(object):
         # Subscribers
         rospy.Subscriber("/locobot/camera/color/image_raw",Image,self.callback)
 
+        self.start()
+
     def callback(self, msg):
         self.image = self.br.imgmsg_to_cv2(msg)
 
     def show_clusters(self, bot, rf):
         _, self.clusters = bot.pcl.get_cluster_positions(ref_frame=rf, sort_axis="y", reverse=True)
         for cluster in self.clusters:
-            print(cluster)
-            #print(np.array(cluster['position']).round(2))
             pixels = self.get_pixel_from3d(cluster['position'])
             # Draw on image the pixel coordinates
             self.image = cv2.circle(self.image, pixels, 10, (255, 0, 0), 3)
@@ -79,12 +80,17 @@ class VisionNode(object):
             Looks through the detected clusters and matches them with the detected bounding boxes
             '''
             objects = PerceivedObjects()
+            objects.header.stamp = rospy.Time.now()
             for c in self.clusters:
                 object = PerceivedObject()
                 object.name = c['name']
-                object.num_points = c['num_points']
-                object.color = c['color']
-                object.position = c['position']
+                object.num_points = int(c['num_points'])
+                object.color.r = int(c['color'][0])
+                object.color.g = int(c['color'][1])
+                object.color.b = int(c['color'][2])
+                object.position.x = c['position'][0]
+                object.position.y = c['position'][1]
+                object.position.z = c['position'][2]
                 
                 px, py = self.get_pixel_from3d(c['position'])
                 for d in self.detections:
@@ -132,12 +138,18 @@ class VisionNode(object):
             z+= d
             if self.image is not None:
                 self.pub.publish(self.br.cv2_to_imgmsg(self.image, "bgr8"))
-            self.detect_pub.publish(objects)
+            if objects is not None:
+                self.detect_pub.publish(objects)
             self.bot.camera.pan_tilt_move(z, i)
 
             self.loop_rate.sleep()
 
+def main(args):   
+    try:
+        VisionNode()
+        rospy.spin()
+    except KeyboardInterrupt:
+        print("Shutting down perception node.")
+
 if __name__ == '__main__':
-    #rospy.init_node("imagetimer111", anonymous=True)
-    my_node = VisionNode()
-    my_node.start()
+    main(sys.argv)  
