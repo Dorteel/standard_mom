@@ -14,7 +14,7 @@ from rdflib.namespace import RDFS, XSD
 class DeclarativeMemory():
     # Must have __init__(self) function for a class, similar to a C++ class constructor.
     def __init__(self):
-
+        ##TODO: Change the ros messages into a service
         # Initialize node
         rospy.init_node("declarative_memory")
         self.loop_rate = rospy.Rate(100)
