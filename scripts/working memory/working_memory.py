@@ -80,6 +80,9 @@ class WorkingMemory():
             self.loop_rate.sleep()
 
 
+
+
+
 def main(args):   
     try:
         WorkingMemory()

@@ -60,6 +60,9 @@ class WorkingMemory():
 
 
     def perception_cb(self, msg):
+        '''
+        Receives the objects from the perception module and generates the scene graph
+        '''
         self.objects = msg.detected_objects
         #rospy.loginfo(self.objects)
 
