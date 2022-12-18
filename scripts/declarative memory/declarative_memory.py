@@ -26,7 +26,7 @@ class DeclarativeMemory():
         self.start()
 
     def query_cb(self, query):
-        answer = [item for item in self.kg.query(query.data)][0][0]
+        answer = ''.join([str(item) for item in self.kg.query(query.data)])
         self.response.publish(answer)
 
     def start(self):
