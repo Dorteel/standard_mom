@@ -1,0 +1,6 @@
+@prefix ns1: <http://knowrob.org/kb/knowrob.owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/cup/> rdfs:label "cup" ;
+    ns1:hasAffordance ns1:GraspingAffordance .
+
