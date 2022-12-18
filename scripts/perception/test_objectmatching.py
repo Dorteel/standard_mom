@@ -98,7 +98,7 @@ class VisionNode(object):
                         object.label = d.Class
                         object.probability = d.probability
                         object.bbox = [d.xmin, d.ymin, d.xmax, d.ymax]
-                        print('Cluster {} is a {}'.format(c['name'], d.Class))
+                        rospy.loginfo('Cluster {} is a {}'.format(c['name'], d.Class))
                 objects.detected_objects.append(object)
             return objects
 
@@ -121,26 +121,12 @@ class VisionNode(object):
 
 
     def start(self):
-        i_uplimit = 1
-        i = 0.8
-        d = 0.05
-        i_lowlimit = 0.6
-        z = 0
-        z_uplimit = 0.25
-        z_lowlimit = -0.25
         while not rospy.is_shutdown():
             self.detections = self.yolo.getDetected()
             self.show_clusters(self.bot, 'locobot/camera_color_optical_frame')
             objects = self.get_objects()
-            #self.sceneGraph = self.generateSceneGraph(objects)
-            #print(self.sceneGraph.serialize(format='ttl'))
-            if z >= z_uplimit or z <= z_lowlimit: d*=-1
-            z+= d
-            if self.image is not None:
-                self.pub.publish(self.br.cv2_to_imgmsg(self.image, "bgr8"))
             if objects is not None:
                 self.detect_pub.publish(objects)
-            self.bot.camera.pan_tilt_move(z, i)
 
             self.loop_rate.sleep()
 

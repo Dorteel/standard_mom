@@ -31,12 +31,12 @@ class VisionNode(object):
         self.pub = rospy.Publisher('test_image', Image,queue_size=20)
         
         # Subscribers
-        rospy.Subscriber("/locobot/camera/color/image_raw",Image,self.imgCallback)
+        #rospy.Subscriber("/locobot/camera/color/image_raw",Image,self.imgCallback)
 
         self.start()
 
-    def imgCallback(self, msg):
-        self.image = self.br.imgmsg_to_cv2(msg, desired_encoding="bgr8")
+    #def imgCallback(self, msg):
+    #    self.image = self.br.imgmsg_to_cv2(msg, desired_encoding="bgr8")
 
     def show_clusters(self, bot, rf):
         _, self.clusters = bot.pcl.get_cluster_positions(ref_frame=rf, sort_axis="y", reverse=True)
@@ -103,29 +103,16 @@ class VisionNode(object):
 
 
     def start(self):
-        i_uplimit = 1
-        i = 0.8
-        d = 0.05
-        i_lowlimit = 0.6
-        z = 0
-        z_uplimit = 0.25
-        z_lowlimit = -0.25
         while not rospy.is_shutdown():
             self.detections = self.yolo.getDetected()
             self.show_clusters(self.bot, 'locobot/camera_color_optical_frame')
             objects = self.get_objects()
-            #self.sceneGraph = self.generateSceneGraph(objects)
-            #print(self.sceneGraph.serialize(format='ttl'))
-            if z >= z_uplimit or z <= z_lowlimit: d*=-1
-            z+= d
-            if self.image is not None:
-                self.pub.publish(self.br.cv2_to_imgmsg(self.image, "bgr8"))
+            #if self.image is not None:
+            #    self.pub.publish(self.br.cv2_to_imgmsg(self.image, "bgr8"))
             if objects is not None:
                 self.detect_pub.publish(objects)
-            self.bot.camera.pan_tilt_move(z, i)
-
             self.loop_rate.sleep()
-
+            rospy.loginfo('Running..')
 def main(args):   
     try:
         VisionNode()
