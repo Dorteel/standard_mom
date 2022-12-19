@@ -5,6 +5,7 @@ import sys
 from std_msgs.msg import String
 import numpy as np
 from interbotix_xs_modules.locobot import InterbotixLocobotXS
+from detection_msgs.msg import PerceivedObject, PerceivedObjects
 
 class Motors():
     # Must have __init__(self) function for a class, similar to a C++ class constructor.
@@ -16,44 +17,44 @@ class Motors():
         self.counter = 0
         # Node cycle rate (in Hz).
         self.loop_rate = rospy.Rate(100)
-
-        # Messages types
-        self.work_msg = String
-        # self.proc_msg = String
-
-
-        # Publishers
-        # self.workmem_topic = "procmem_to_workmem"
-        # self.pub = rospy.Publisher(self.workmem_topic, self.proc_msg, queue_size=100)
-
-        ## Subscribers
-        self.work_listen_topic = "workmem_to_motors"
-        rospy.Subscriber(self.work_listen_topic, self.work_msg, self.from_wm_cb)
-
-        # Buffers
-        # self.motor_buffer = np.empty()
-        # self.perc_buffer = np.empty()
-        # self.decl_buffer = np.empty()
-        # self.proc_buffer = np.empty()
+        self.object = None
+        # Subsribers
+        rospy.Subscriber("workmem_to_motors", PerceivedObject, self.from_wm_cb)
+        rospy.Subscriber("/standard_model/perception_output", PerceivedObjects, self.perception_cb)
 
         self.start()
 
-    def from_wm_cb(self, msg):
-        self.msg = msg
-        #rospy.loginfo("Received from working memory: {}".format(self.msg.data))
+    def perception_cb(self, msg):
+        '''
+        Receives the objects from the perception module and generates the scene graph
+        '''
+        self.objects = msg.detected_objects
 
+    def pickup(self, obj):
+        # pick up each object from left-to-right and drop it in a virtual basket on the left side of the robot
+        x = obj.position.x
+        y = obj.position.y
+        z = obj.position.z
+        self.bot.arm.set_ee_pose_components(x=x, y=y+0.01, z=z+0.05, pitch=0.5)
+        self.bot.arm.set_ee_pose_components(x=x, y=y+0.01, z=z-0.02, pitch=0.5)
+        self.bot.gripper.close()
+        self.bot.arm.set_ee_pose_components(x=x, y=y, z=z+0.05, pitch=0.5)
+        self.bot.arm.set_ee_pose_components(y=0.3, z=0.2)
+        self.bot.gripper.open()
+        self.bot.arm.set_ee_pose_components(x=0.3, z=0.2)
+        self.bot.arm.go_to_sleep_pose()
+
+    def from_wm_cb(self, obj):
+        rospy.logerr('Received object: {}'.format(obj.label))
+        self.object = obj
 
     def start(self):
         while not rospy.is_shutdown():
-            #if self.counter <= 2:
-                #self.bot.camera.pan_tilt_move(0.4, 0.9)
-                #self.bot.arm.set_ee_pose_components(x=0.3, z=0.2, moving_time=1.5)
-                #self.bot.gripper.open()
-                #rospy.loginfo("Step: {}".format(self.counter))
-            #else:
-                #pass
-                #self.bot.arm.go_to_sleep_pose()
-            self.counter += 1
+            self.bot.camera.pan_tilt_move(0, 0.75)
+            
+            if self.object:
+                self.pickup(self.object)
+                self.object = None
             self.loop_rate.sleep()
 
 

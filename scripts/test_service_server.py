@@ -12,7 +12,7 @@ def handle_answer_query(req):
 def answer_query_server():
     rospy.init_node('answer_query_server')
     s = rospy.Service('answer_query', AnswerQuery, handle_answer_query)
-    print("Ready to add two ints.")
+    
     rospy.spin()
 
 if __name__ == "__main__":

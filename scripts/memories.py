@@ -45,7 +45,7 @@ class ProceduralMemory():
             {   ?object knowrob:hasAffordance knowrob:GraspingAffordance .
                 ?object rdfs:label '""" + obj + """' .
             }"""
-        return test_q
+        return query
 
 class Memories():
     # Must have __init__(self) function for a class, similar to a C++ class constructor.
@@ -58,8 +58,9 @@ class Memories():
         # Node cycle rate (in Hz).
         self.loop_rate = rospy.Rate(100)
         self.objects = None
-
+        rospy.loginfo('Memory modules initialized')
         # Messages
+        self.action_pub = rospy.Publisher('workmem_to_motors', PerceivedObject,queue_size=20)
         rospy.Subscriber("/standard_model/perception_output", PerceivedObjects, self.perception_cb)
         self.start()
 
@@ -74,14 +75,21 @@ class Memories():
     def start(self):
         while not rospy.is_shutdown():
             # Publish our custom message.
-            #rospy.loginfo(self.objects)
-            obj = 'cup'
-            q = self.procedural_memory.getAffordance(obj)
-            response = self.working_memory.query_dm_client(q)
-            print(response)
-            #self.query_pub.publish(q)
+            if self.objects:
+                for obj in self.objects:
+                    if not obj.label:
+                        rospy.loginfo("Identity of {} is not recognised".format(obj.name))
+                        continue
+                    objType = obj.label
+                    q = self.procedural_memory.getAffordance(objType)
+                    response = self.working_memory.query_dm_client(q)
+                    if response == 'True':
+                        #rospy.logerr(response)
+                        rospy.logerr("{} is a GraspableObject".format(objType))
+                        self.action_pub.publish(obj)
+                    else:
+                        rospy.logerr("{} is not a GraspableObject".format(objType))
             self.loop_rate.sleep()
-
 
 def main(args):   
     try:
