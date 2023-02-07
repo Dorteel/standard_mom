@@ -9,7 +9,7 @@ from rdflib.plugins.sparql import prepareQuery
 from rdflib import Graph, URIRef, Namespace, Literal
 from rdflib.namespace import RDFS, XSD
 
-
+from standard_mom.srv import AnswerQuery
 
 class DeclarativeMemory():
     # Must have __init__(self) function for a class, similar to a C++ class constructor.
@@ -18,20 +18,23 @@ class DeclarativeMemory():
         # Initialize node
         rospy.init_node("declarative_memory")
         self.loop_rate = rospy.Rate(100)
-
-        self.kg = Graph().parse('memory.ttl')
-        self.response = rospy.Publisher('/declarative_memory/response', String, queue_size=100)
-        rospy.Subscriber('working_memory/query', String, self.query_cb)
-
+        
+        path_to_kg = '/home/user/locobot_ws/src/standard_model_of_mind/standard_mom/scripts/declarative memory/memory.ttl'
+        self.kg = Graph().parse(path_to_kg)
+        # self.response = rospy.Publisher('/declarative_memory/response', String, queue_size=100)
+        # rospy.Subscriber('working_memory/query', String, self.query_cb)
+        s = rospy.Service('answer_query', AnswerQuery, self.handle_answer_query)
         self.start()
 
-    def query_cb(self, query):
-        answer = [item for item in self.kg.query(query.data)][0][0]
-        self.response.publish(answer)
+    def handle_answer_query(self, req):
+        answer = ''.join([str(item) for item in self.kg.query(req.query)])
+        return answer
 
     def start(self):
         while not rospy.is_shutdown():
+            
             self.loop_rate.sleep()
+            #rospy.spin()
 
 
 def main(args):   

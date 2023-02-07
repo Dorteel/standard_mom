@@ -5,13 +5,14 @@ import sys
 from sensor_msgs.msg import Image
 from std_msgs.msg import String
 import numpy as np
+from detection_msgs.msg import PerceivedObject, PerceivedObjects
 
 class WorkingMemory():
     # Must have __init__(self) function for a class, similar to a C++ class constructor.
     def __init__(self):
 
         # Initialize node
-        rospy.init_node("working memory")
+        rospy.init_node("working_memory")
 
         # Node cycle rate (in Hz).
         self.loop_rate = rospy.Rate(100)
@@ -39,17 +40,10 @@ class WorkingMemory():
         self.decl_listen_topic = "declmem_to_workmem"
         rospy.Subscriber(self.decl_listen_topic, self.decl_msg, self.declarative_cb)
 
-        self.perc_listen_topic = "perception_to_workmem"
-        rospy.Subscriber(self.perc_listen_topic, self.perc_msg, self.perception_cb)
+        rospy.Subscriber("/standard_model/perception_output", PerceivedObjects, self.perception_cb)
 
         self.proc_listen_topic = "procmem_to_workmem"
         rospy.Subscriber(self.proc_listen_topic, self.proc_msg, self.procedural_cb)
-
-        # Buffers
-        # self.motor_buffer = np.empty()
-        # self.perc_buffer = np.empty()
-        # self.decl_buffer = np.empty()
-        # self.proc_buffer = np.empty()
 
         self.start()
 
@@ -58,8 +52,11 @@ class WorkingMemory():
         #rospy.logdebug("Received from declarative memory: {}".format(self.msg.data))
 
     def perception_cb(self, msg):
-        self.msg = msg
-        #rospy.loginfo("Received from perception: {}".format(self.msg.data))
+        '''
+        Receives the objects from the perception module and generates the scene graph
+        '''
+        self.objects = msg.detected_objects
+        #rospy.loginfo(self.objects)
 
     def procedural_cb(self, msg):
         self.msg = msg
@@ -68,27 +65,62 @@ class WorkingMemory():
 
     def start(self):
         while not rospy.is_shutdown():
-            # Publish our custom message.
-            dummy_msg = "Move ahead"
-            self.motor_pub.publish(dummy_msg)
-            dummy_msg = "I saw this..."
-            self.decl_pub.publish(dummy_msg)
-            dummy_msg = "Action required"
-            self.proc_pub.publish(dummy_msg)
-            dummy_msg = "Msg 4 perception"
-            self.perc_pub.publish(dummy_msg)
+            
             self.loop_rate.sleep()
 
 
+class ProceduralMemory():
+    def __init__(self):
 
+        # Initialize node
+        rospy.init_node("procedural_memory")
+
+        # Node cycle rate (in Hz).
+        self.loop_rate = rospy.Rate(100)
+
+        # Messages types
+        self.work_msg = String
+        self.proc_msg = String
+
+
+        # Publishers
+        self.workmem_topic = "procmem_to_workmem"
+        self.pub = rospy.Publisher(self.workmem_topic, self.proc_msg, queue_size=100)
+
+        ## Subscribers
+        self.work_listen_topic = "workmem_to_procmem"
+        rospy.Subscriber(self.work_listen_topic, self.work_msg, self.from_wm_cb)
+
+        # Buffers
+        # self.motor_buffer = np.empty()
+        # self.perc_buffer = np.empty()
+        # self.decl_buffer = np.empty()
+        # self.proc_buffer = np.empty()
+        self.workingMemory = WorkingMemory()
+        WorkingMemory.start()
+        self.start()
+
+    def from_wm_cb(self, msg):
+        self.msg = msg
+        #rospy.loginfo("Received from working memory: {}".format(self.msg.data))
+
+
+    def start(self):
+        while not rospy.is_shutdown():
+            # Publish our custom message.
+            dummy_msg = "Move ahead"
+            self.pub.publish(dummy_msg)
+            rospy.loginfo('Procedural memory runnning')
+            self.loop_rate.sleep()
 
 
 def main(args):   
     try:
-        WorkingMemory()
+        ProceduralMemory()
+        
         rospy.spin()
     except KeyboardInterrupt:
-        print("Shutting down working memory node.")
+        print("Shutting down procedural memory node.")
 
 if __name__ == '__main__':
-    main(sys.argv)                      
+    main(sys.argv)                                       

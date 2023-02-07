@@ -79,17 +79,6 @@ class WorkingMemory():
         while not rospy.is_shutdown():
             # Perception loop
             rospy.loginfo(self.objects)
-            # Publish our custom message.
-            # rospy.loginfo('Running..')
-            # dummy_msg = "Move ahead"
-            # self.motor_pub.publish(dummy_msg)
-            # dummy_msg = "I saw this..."
-            # self.decl_pub.publish(dummy_msg)
-            # dummy_msg = "Action required"
-            # self.proc_pub.publish(dummy_msg)
-            # dummy_msg = "Msg 4 perception"
-            # self.perc_pub.publish(dummy_msg)
-            rospy.loginfo(self.objects)
             self.loop_rate.sleep()
             
 

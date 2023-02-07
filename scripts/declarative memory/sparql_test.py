@@ -16,13 +16,22 @@ g.add((cup, RDFS.label, Literal('cup')))
 g.add((cup, knowrob.hasAffordance, knowrob.GraspingAffordance))
 g.serialize(destination="memory.ttl")
 
+
 m = """
 PREFIX knowrob: <http://knowrob.org/kb/knowrob.owl#>
 SELECT ?label WHERE 
 {   ?object knowrob:hasAffordance knowrob:GraspingAffordance .
     ?object rdfs:label ?label .
 }"""
-qres = g.query(m)
+obj = 'cup'
+query = """
+            PREFIX knowrob: <http://knowrob.org/kb/knowrob.owl#>
+            ASK 
+            {   ?object knowrob:hasAffordance knowrob:GraspingAffordance .
+                ?object rdfs:label '""" + obj + """' .
+            }"""
+
+qres = g.query(query)
 
 # qres = g.query("""
 # PREFIX knowrob: <http://knowrob.org/kb/knowrob.owl#>
@@ -36,8 +45,7 @@ qres = g.query(m)
 #     initNs = { "knowrob": knowrob }
 # )
 
-for row in qres:
-    print(row[0])
+print(''.join([str(item) for item in qres]))
     #print(f"{row.s}")
 
 # g.parse(

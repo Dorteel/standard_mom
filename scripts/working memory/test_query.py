@@ -11,7 +11,7 @@ from rdflib.namespace import RDFS, XSD
 
 
 
-class DeclarativeMemory():
+class Querier():
     # Must have __init__(self) function for a class, similar to a C++ class constructor.
     def __init__(self):
 
@@ -38,7 +38,7 @@ class DeclarativeMemory():
 
 def main(args):   
     try:
-        DeclarativeMemory()
+        Querier()
         rospy.spin()
     except KeyboardInterrupt:
         print("Shutting down declarative memory node.")

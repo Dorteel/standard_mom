@@ -4,3 +4,8 @@
 <http://example.org/cup/> rdfs:label "cup" ;
     ns1:hasAffordance ns1:GraspingAffordance .
 
+<http://example.org/mouse/> rdfs:label "mouse" ;
+    ns1:hasAffordance ns1:GraspingAffordance .
+
+<http://example.org/pen/> rdfs:label "pen" ;
+    ns1:hasAffordance ns1:GraspingAffordance .
